@@ -123,7 +123,7 @@ Once the application starts, the webcam activates and the system begins monitori
 ## Author
 
 Satvika Chilakala
-B.Tech Computer Science Student
+B.Tech Cyber Security Student
 
 GitHub: https://github.com/satvika1609
 
