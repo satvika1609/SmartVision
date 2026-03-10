@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Security Monitoring</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+:root {
+    --bg: #0b1220;
+    --card: #111827;
+    --sidebar: #172033;
+    --text: #e5e7eb;
+    --border: #253045;
+    --input: #1f2937;
+}
+
+[data-theme="light"] {
+    --bg: #ffffff;
+    --card: #ffffff;
+    --sidebar: #f8fafc;
+    --text: #0f172a;
+    --border: #e2e8f0;
+    --input: #ffffff;
+}
+
+body {
+    background: radial-gradient(circle at top left, #1e293b, #0b1220 60%);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+[data-theme="light"] body {
+    background: #ffffff;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.sidebar {
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+}
+
+.input {
+    background: var(--input);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+[data-theme="light"] .card {
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.glass-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+[data-theme="light"] .glass-card {
+    background: rgba(255,255,255,0.9);
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity:0;
+        transform: translateY(20px) scale(0.97);
+    }
+    to {
+        opacity:1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.login-animate {
+    animation: fadeSlide 0.45s ease;
+}
+
+#intruderTime{
+    margin-top:10px;
+    font-weight:500;
+}
+
+</style>
+
+</head>
+
+<body class="min-h-screen">
+
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage" class="flex items-center justify-center h-screen">
+
+    <!-- ✨ UPDATED LOGIN BOX -->
+    <div class="glass-card login-animate p-10 rounded-2xl w-96">
+
+        <h2 class="text-2xl font-semibold mb-6 text-center">
+            Admin Login
+        </h2>
+
+        <input id="username"
+            class="input w-full p-2 mb-4 rounded"
+            placeholder="Username">
+
+        <input id="password"
+            type="password"
+            class="input w-full p-2 mb-4 rounded"
+            placeholder="Password">
+
+        <button onclick="login()"
+            class="w-full bg-indigo-600 py-2 rounded text-white hover:bg-indigo-700 transition">
+            Login
+        </button>
+
+        <button onclick="forgotPassword()"
+            class="mt-3 text-sm underline w-full opacity-80 hover:opacity-100">
+            Forgot Password?
+        </button>
+
+    </div>
+</div>
+
+
+
+<!-- ================= APP ================= -->
+
+<div id="appPage" class="hidden flex">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar w-64 p-5 min-h-screen">
+
+        <h2 class="text-lg font-semibold mb-6">Navigation</h2>
+
+        <button onclick="showPage('dashboard')"
+            class="block w-full text-left mb-3 p-2 rounded hover:bg-indigo-600">
+            Dashboard
+        </button>
+
+        <button onclick="showPage('staff')"
+            class="block w-full text-left mb-3 p-2 rounded hover:bg-indigo-600">
+            Staff
+        </button>
+
+        <button onclick="showPage('logs')"
+            class="block w-full text-left mb-3 p-2 rounded hover:bg-indigo-600">
+            Logs
+        </button>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <div class="flex-1 p-6">
+
+        <!-- TOP BAR -->
+        <div class="flex justify-between items-center mb-6">
+
+            <h1 class="text-2xl font-semibold">
+                Security Monitoring
+            </h1>
+
+            <div class="flex gap-3">
+
+                <button id="themeBtn"
+                    class="w-12 h-8 rounded bg-gray-700 flex items-center justify-center text-white">
+                    🌙
+                </button>
+
+                <button onclick="logout()"
+                    class="bg-red-600 px-3 py-1 rounded text-white">
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <div id="dashboardPage">
+            <div id="intrusionBanner"
+                class="hidden bg-red-600 text-white p-3 rounded mb-4 text-center font-semibold animate-pulse">
+
+                    🚨 LIVE INTRUSION DETECTED
+
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+
+                <div class="card p-6 rounded-xl">
+                    <div class="text-3xl font-bold" id="intrusionCount">0</div>
+                    <div>Intrusions</div>
+                </div>
+
+                <div class="card p-6 rounded-xl">
+                    <div class="text-3xl font-bold" id="staffCount">0</div>
+                    <div>Staff</div>
+                </div>
+
+                <div class="card p-6 rounded-xl">
+                    <div class="text-3xl font-bold text-green-500">
+                        Active
+                    </div>
+                    <div>System</div>
+                </div>
+
+            </div>
+
+            <div class="card p-6 rounded-xl text-center">
+
+                <h2 class="text-xl mb-4">
+                    Latest Intrusion
+                </h2>
+
+                <img id="intruderImg"
+                    style="max-height:400px; margin:auto; border-radius:10px;"
+                    src="">
+
+                <p id="intruderTime" class="mt-3 text-sm opacity-70"></p>
+
+                <p id="noIntrusionText" class="mt-4 opacity-60">
+                    No intrusion detected yet
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= STAFF ================= -->
+
+        <div id="staffPage" class="hidden">
+
+            <h2 class="text-xl mb-4">Staff Management</h2>
+
+            <div class="card p-6 rounded-xl mb-6">
+
+                <label>Staff Name</label>
+                <input id="staffName"
+                       class="input w-full p-2 mb-4 rounded">
+
+                <label>Upload Images</label>
+                <input id="staffImages"
+                       type="file"
+                       multiple
+                       class="input w-full p-2 mb-4 rounded">
+
+                <button onclick="addStaff()"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded">
+                    Save Staff
+                </button>
+
+            </div>
+
+
+            <div class="card p-6 rounded-xl">
+
+                <label>Select Staff</label>
+
+                <select id="staffDropdown"
+                        class="input w-full p-2 mb-4 rounded">
+                </select>
+
+                <button onclick="deleteStaff()"
+                        class="bg-red-600 text-white px-4 py-2 rounded mb-3">
+                    Delete Staff
+                </button>
+
+                <br>
+
+                <button onclick="regenerate()"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded">
+                    Regenerate Embeddings
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= LOGS ================= -->
+
+        <div id="logsPage" class="hidden">
+
+            <h2 class="text-xl mb-4">Intrusion Logs</h2>
+
+            <div class="card p-4 rounded-xl overflow-auto">
+
+                <table class="w-full text-sm">
+
+                    <thead>
+                        <tr>
+                            <th class="text-left p-2">Timestamp</th>
+                            <th class="text-left p-2">Filename</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="logsTable"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<audio id="alarmSound" src="alarm.wav" preload="auto"></audio>
+
+<script src="app.js"></script>
+
+</body>
+</html>
